@@ -1,73 +1,96 @@
-# React + TypeScript + Vite
+# ADHD Tracker Chrome Extension
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+A Chrome extension to help track focus, activities, and manage ADHD-related tasks through browser-based tracking.
 
-Currently, two official plugins are available:
+## Tech Stack
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) (or [oxc](https://oxc.rs) when used in [rolldown-vite](https://vite.dev/guide/rolldown)) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+- React 19 + TypeScript
+- Vite (rolldown-vite) for building
+- Chrome Extension Manifest V3
+- Chrome APIs: storage, alarms, notifications
 
-## React Compiler
+## Getting Started
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+### Prerequisites
 
-## Expanding the ESLint configuration
+- Node.js 18+
+- pnpm (recommended) or npm
+- Chrome browser
 
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
+### Installation
 
-```js
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-
-      // Remove tseslint.configs.recommended and replace with this
-      tseslint.configs.recommendedTypeChecked,
-      // Alternatively, use this for stricter rules
-      tseslint.configs.strictTypeChecked,
-      // Optionally, add this for stylistic rules
-      tseslint.configs.stylisticTypeChecked,
-
-      // Other configs...
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+1. Install dependencies:
+```bash
+pnpm install
 ```
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
+2. **Add extension icons** (required before building):
+   - Create `public/icon16.png` (16x16px)
+   - Create `public/icon48.png` (48x48px)
+   - Create `public/icon128.png` (128x128px)
 
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
-
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-      // Enable lint rules for React
-      reactX.configs['recommended-typescript'],
-      // Enable lint rules for React DOM
-      reactDom.configs.recommended,
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+3. Build the extension:
+```bash
+pnpm build
 ```
+
+### Loading in Chrome
+
+1. Open Chrome and navigate to `chrome://extensions/`
+2. Enable "Developer mode" (toggle in top right)
+3. Click "Load unpacked"
+4. Select the `dist/` folder from this project
+
+### Development
+
+For active development with auto-rebuild:
+
+```bash
+pnpm build:watch
+```
+
+After making changes, reload the extension in Chrome:
+- Go to `chrome://extensions/`
+- Click the refresh icon on the ADHD Tracker extension
+
+## Project Structure
+
+```
+src/
+├── popup/          # React UI for extension popup
+│   ├── index.tsx   # Entry point
+│   ├── App.tsx     # Main component
+│   └── App.css     # Styles
+├── background/     # Background service worker
+│   └── index.ts    # Handles tracking, storage, notifications
+├── content/        # Content scripts (runs on web pages)
+│   └── index.ts    # Tracks page activity
+└── shared/         # Shared utilities and types
+    ├── types.ts    # TypeScript interfaces
+    ├── storage.ts  # Chrome storage helpers
+    └── messaging.ts # Chrome messaging helpers
+```
+
+## Features (Planned)
+
+- Track focus sessions
+- Monitor page activity and distractions
+- Session history and statistics
+- Notifications for tracking reminders
+- Activity logging across tabs
+
+## Available Scripts
+
+- `pnpm build` - Build extension for production
+- `pnpm build:watch` - Build and watch for changes
+- `pnpm type-check` - Run TypeScript type checking
+- `pnpm lint` - Lint code with ESLint
+
+## Chrome Extension Architecture
+
+This extension uses Manifest V3 with:
+- **Popup**: React-based UI shown when clicking the extension icon
+- **Background Service Worker**: Handles persistent logic and data
+- **Content Scripts**: Injected into web pages to track activity
+
+See `CLAUDE.md` for detailed architecture documentation.

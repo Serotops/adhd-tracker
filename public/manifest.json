@@ -1,0 +1,42 @@
+{
+  "manifest_version": 3,
+  "name": "ADHD Tracker",
+  "version": "0.0.1",
+  "description": "Track and manage ADHD-related tasks and focus sessions",
+  "icons": {
+    "16": "icon16.ico",
+    "48": "icon48.ico",
+    "128": "icon128.ico"
+  },
+  "action": {
+    "default_popup": "popup.html",
+    "default_icon": {
+      "16": "icon16.ico",
+      "48": "icon48.ico",
+      "128": "icon128.ico"
+    }
+  },
+  "background": {
+    "service_worker": "background.js",
+    "type": "module"
+  },
+  "permissions": [
+    "storage",
+    "alarms",
+    "notifications"
+  ],
+  "content_scripts": [
+    {
+      "matches": ["<all_urls>"],
+      "js": ["content.js"],
+      "run_at": "document_idle"
+    }
+  ],
+  "host_permissions": [],
+  "web_accessible_resources": [
+    {
+      "resources": ["assets/*"],
+      "matches": ["<all_urls>"]
+    }
+  ]
+}
